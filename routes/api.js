@@ -35,6 +35,22 @@ router.get('/files', function(req, res, next) {
   });
 });
 
+router.delete('/files/:fid', function(req, res, next) {
+  // delete file
+  let conn = req.app.get('db_conn');
+  let gfs = Grid(conn.db, mongoose.mongo);
+  let fid = req.params.fid;
+  gfs.remove({_id: fid}, function (err) {
+    if (err) {
+      res.status(500).json({msg: 'inter server error', err: true});
+      res.end();
+    } else {
+      res.status(200).json({msg: 'ok', err: false});
+      res.end();
+    }
+  });
+});
+
 router.get('/files/:fid', function(req, res, next) {
   if(req.params.fid === undefined) {
     res.status(400).json({msg: 'file ID not defined', err: true});
@@ -82,8 +98,6 @@ router.post('/upload', uploadMiddleware.single('file'), function(req, res, next)
   }
 });
 
-router.delete('files/:fid', function(req, res, next) {
-  // delete file
-});
+
 
 module.exports = router;
