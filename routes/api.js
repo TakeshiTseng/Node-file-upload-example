@@ -36,6 +36,25 @@ router.get('/files', function(req, res, next) {
   });
 });
 
+router.get('/files/:fid', function(req, res, next) {
+  if(req.params.fid === undefined) {
+    res.status(400).json({msg: 'file ID not defined', err: true});
+    res.end();
+  } else {
+    // if fid is not undefined, download it.
+    let fid = req.params.fid;
+    let conn = req.app.get('db_conn');
+    let gfs = Grid(conn.db, mongoose.mongo);
+    gfs.findOne({_id: fid}, function(err, file) {
+      if(err) {
+        res.status(500).json({msg: 'inter server error', err: true, result: []});
+        res.end();
+      } else {
+        res.status(200).json({msg: 'ok', err: false, result: file});
+        res.end();
+      }
+    });
+  }
 });
 
 router.post('/upload', uploadMiddleware.single('file'), function(req, res, next) {
