@@ -1,8 +1,8 @@
 'use strict';
 
 /*
- * API for file resources.
- */
+* API for file resources.
+*/
 
 
 var fs = require('fs');
@@ -14,37 +14,37 @@ var mongoose = require('mongoose');
 var Grid = require('gridfs-stream');
 
 /*
- * api location start at /api
- */
+* api location start at /api
+*/
 router.get('/', function(req, res, next) {
-    // rendering api document
-    res.render('api_doc', { title: 'Express' });
+  // rendering api document
+  res.render('api_doc', { title: 'Express' });
 });
 
 router.get('/files/:fid', function(req, res, next) {
-    // list all files
-    // if fid is not undefined, download it.
+  // list all files
+  // if fid is not undefined, download it.
 });
 
 router.post('/upload', uploadMiddleware.single('file'), function(req, res, next) {
-    // upload a file
-    if(req.file === undefined) {
-        // file empty
-        res.status(400).json({msg: 'File is undefined.', err: true});
-        res.end();
-    } else {
-        let filePath = req.file.path;
-        let fileName = req.file.originalname;
-        let conn = req.app.get('db_conn');
-        let gfs = Grid(conn.db, mongoose.mongo);
-        let writestream = gfs.createWriteStream({filename: fileName});
-        fs.createReadStream(filePath).pipe(writestream);
-        res.status(201).json({msg: 'file created', err: false});
-    }
+  // upload a file
+  if(req.file === undefined) {
+    // file empty
+    res.status(400).json({msg: 'File is undefined.', err: true});
+    res.end();
+  } else {
+    let filePath = req.file.path;
+    let fileName = req.file.originalname;
+    let conn = req.app.get('db_conn');
+    let gfs = Grid(conn.db, mongoose.mongo);
+    let writestream = gfs.createWriteStream({filename: fileName});
+    fs.createReadStream(filePath).pipe(writestream);
+    res.status(201).json({msg: 'file created', err: false});
+  }
 });
 
 router.delete('files/:fid', function(req, res, next) {
-    // delete file
+  // delete file
 });
 
 module.exports = router;
