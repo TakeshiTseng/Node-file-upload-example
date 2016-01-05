@@ -31,3 +31,7 @@ npm-debug.log
 
 # tmp_files
 tmp_files/*
+
+# js buindle
+public/javascripts/bundle.js
+
