@@ -27,7 +27,8 @@ router.get('/files/:fid', function(req, res, next) {
 
 router.post('/upload', uploadMiddleware.single('file'), function(req, res, next) {
     // upload a file
-    if(!req.file) {
+    if(req.file === undefined) {
+        // file empty
         res.status(400).json({msg: 'File is undefined.', err: true});
         res.end();
     }
