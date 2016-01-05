@@ -4,7 +4,6 @@
 * API for file resources.
 */
 
-
 var fs = require('fs');
 var express = require('express');
 var router = express.Router();
@@ -49,11 +48,20 @@ router.get('/files/:fid', function(req, res, next) {
       if(err) {
         res.status(500).json({msg: 'inter server error', err: true, result: []});
         res.end();
-      } else {
-        res.status(200).json({msg: 'ok', err: false, result: file});
+      } else if(!file){
+        res.status(404).json({msg: 'file not found', err: true, result: []});
         res.end();
+      } else {
+        let filename = file.filename;
+        res.set('Content-Type', file.contentType);
+        res.set('Content-Disposition', `attachment; filename*=UTF-8''${filename}`);
+        res.set('Content-Length', file.chunkSize);
+
+        let readstream = gfs.createReadStream({_id: fid});
+        readstream.pipe(res);
       }
     });
+
   }
 });
 
