@@ -1,3 +1,10 @@
+'use strict';
+
+/*
+ * API for file resources.
+ */
+
+
 var fs = require('fs');
 var express = require('express');
 var router = express.Router();
