@@ -18,6 +18,7 @@ var Grid = require('gridfs-stream');
  */
 router.get('/', function(req, res, next) {
     // rendering api document
+    res.render('api_doc', { title: 'Express' });
 });
 
 router.get('/files/:fid', function(req, res, next) {
