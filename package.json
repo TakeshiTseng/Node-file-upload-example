@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
+    "ui": "browserify ui/files.js -o public/javascripts/bundle.js -t [ babelify --presets [ es2015 react ] ]"
   },
   "dependencies": {
     "babel-preset-es2015": "^6.3.13",
