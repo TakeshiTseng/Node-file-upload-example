@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
     // rendering api document
 });
 
-route.get('/files/:fid', function(req, res, next) {
+router.get('/files/:fid', function(req, res, next) {
     // list all files
     // if fid is not undefined, download it.
 });
@@ -38,7 +38,7 @@ router.post('/upload', uploadMiddleware.single('file'), function(req, res, next)
     });
 });
 
-route.delete('files/:fid', function(req, res, next) {
+router.delete('files/:fid', function(req, res, next) {
     // delete file
 });
 
