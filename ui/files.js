@@ -55,8 +55,8 @@ var FileApp = React.createClass({
         data: data,
         cache: false,
         dataType: 'json',
-        processData: false, // Don't process the files
-        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+        processData: false,
+        contentType: false,
         success: function(data, msg, jqXHR) {
             if(typeof data.error === 'undefined')
             {
@@ -71,7 +71,6 @@ var FileApp = React.createClass({
     });
   },
   handleFileChange: function(e) {
-    var reader = new FileReader();
     var file = e.target.files[0];
     this.setState({fileToUpload: e.target.files[0]});
   },
