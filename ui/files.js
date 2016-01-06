@@ -47,6 +47,10 @@ var FileApp = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     var data = new FormData();
+    if(!this.state.fileToUpload) {
+      // ignore when file is empty
+      return;
+    }
     data.append('file', this.state.fileToUpload);
 
     $.ajax({
