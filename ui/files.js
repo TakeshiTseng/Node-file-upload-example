@@ -62,12 +62,13 @@ var FileApp = React.createClass({
         processData: false,
         contentType: false,
         success: function(data, msg, jqXHR) {
-            if(typeof data.error === 'undefined')
-            {
-              this.updateFileList();
-            } else {
-                console.log('Error: ' + data.error);
-            }
+          // data: return data
+          if(!data.err)
+          {
+            this.updateFileList();
+          } else {
+              console.log('Error: ' + data.msg);
+          }
         }.bind(this),
         error: function(jqXHR, msg, err) {
           console.log("Error: " + msg);
