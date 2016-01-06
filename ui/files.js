@@ -7,8 +7,12 @@ var urlencode = require('urlencode');
 var FileList = React.createClass({
   render: function() {
     var createFileItem = function(item) {
-      return <li key={item._id}><a href={'/api/files/' + item._id}>{urlencode.decode(item.filename)}</a></li>;
-    };
+      return (<li key={item._id}>
+                <a href={'/api/files/' + item._id}>{urlencode.decode(item.filename)}</a>
+                &nbsp;
+                <a href='#' onClick={this.props.deleteFile} id={item._id}>Delete file</a>
+              </li>);
+    }.bind(this);
     return <ul>{this.props.files.map(createFileItem)}</ul>;
   }
 });
@@ -21,7 +25,7 @@ var FileApp = React.createClass({
           <input name="file" type="file" onChange={this.handleFileChange} />
           <input name="submit" type="submit" />
         </form>
-        <FileList files={this.state.files} />
+        <FileList files={this.state.files} deleteFile={this.deleteFile}/>
       </div>
     );
   },
@@ -63,8 +67,7 @@ var FileApp = React.createClass({
         contentType: false,
         success: function(data, msg, jqXHR) {
           // data: return data
-          if(!data.err)
-          {
+          if(!data.err) {
             this.updateFileList();
           } else {
               console.log('Error: ' + data.msg);
@@ -80,17 +83,28 @@ var FileApp = React.createClass({
     this.setState({fileToUpload: e.target.files[0]});
   },
   componentDidMount: function() {
-    $.get('/api/files', function(res) {
-      if(res.err) {
-        this.setState({
-          files: []
-        });
-      } else {
-        this.setState({
-          files: res.result
-        });
-      }
-    }.bind(this));
+    this.updateFileList();
+  },
+  deleteFile: function(item) {
+    var itemId = item.target.id;
+    $.ajax({
+        url: '/api/files/' + itemId,
+        type: 'DELETE',
+        cache: false,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        success: function(data, msg, jqXHR) {
+          if(!data.err) {
+            this.updateFileList();
+          } else {
+              console.log('Error: ' + data.msg);
+          }
+        }.bind(this),
+        error: function(jqXHR, msg, err) {
+          console.log("Error: " + msg);
+        }.bind(this)
+    });
   }
 });
 
