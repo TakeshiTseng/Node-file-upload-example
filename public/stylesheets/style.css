@@ -6,3 +6,30 @@ body {
 a {
   color: #00B7FF;
 }
+
+.drop-zone {
+  padding: 10px;
+  width: 250px;
+  border-color: #000;
+  border-radius: 10px;
+  background-color: #FFF;
+  border-style: solid;
+}
+
+.drop-zone:hover {
+  width: 250px;
+  border-color: #000;
+  border-radius: 3;
+  border-style: solid;
+  color: #FFF;
+  background-color: #ff6600;
+}
+
+.drop-zone-active {
+  width: 250px;
+  border-color: #000;
+  border-radius: 3;
+  border-style: solid;
+  color: #FFF;
+  background-color: #ff6600;
+}
