@@ -4,8 +4,25 @@
 
 - Node.js 4.2
 - Mongo DB
+- browserify
+
+#### Backend:
+
+- Express
+- Mongo DB
+
+#### Frontend:
+
+- React
+- jQuery
 
 #### Install:
+
+Install babel
+
+``` shell
+$ npm install -g babel-cli babel-preset-react
+```
 
 Install dependencies:
 
@@ -19,6 +36,12 @@ Build bundle.js for front-end
 $ npm run-script ui
 ```
 
+or use
+
+``` shell
+$ browserify ui/files.js -o public/javascripts/bundle.js -t [ babelify --presets [ es2015 react ] ]
+```
+
 
 
 #### Start server:
@@ -26,4 +49,3 @@ $ npm run-script ui
 ``` shell
 $ npm start
 ```
-
