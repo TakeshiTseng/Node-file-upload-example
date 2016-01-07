@@ -2,7 +2,7 @@
 
 var $ = require('jquery');
 var urlencode = require('urlencode');
-
+var Dropzone = require('react-dropzone');
 
 var FileList = React.createClass({
   render: function() {
@@ -21,10 +21,9 @@ var FileApp = React.createClass({
   render: function() {
     return (
       <div>
-        <form onSubmit={this.handleSubmit} encType="multipart/form-data" action="/api/upload" method="POST">
-          <input name="file" type="file" onChange={this.handleFileChange} />
-          <input name="submit" type="submit" />
-        </form>
+        <Dropzone ref='dropzone' onDrop={this.onDrop} onDragOver={this.onDragOver} className='drop-zone' activeClassName='drop-zone-active'>
+             <div>Drop file here, or click to select file to upload.</div>
+        </Dropzone>
         <FileList files={this.state.files} deleteFile={this.deleteFile}/>
       </div>
     );
@@ -48,14 +47,40 @@ var FileApp = React.createClass({
       }
     }.bind(this));
   },
-  handleSubmit: function(e) {
-    e.preventDefault();
+  componentDidMount: function() {
+    this.updateFileList();
+    this.refs.dropzone.multiple = false;
+  },
+  deleteFile: function(item) {
+    var itemId = item.target.id;
+
+    $.ajax({
+        url: '/api/files/' + itemId,
+        type: 'DELETE',
+        cache: false,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        success: function(data, msg, jqXHR) {
+          if(!data.err) {
+            setTimeout(function() {
+              // need a delay to ensure that file updated at db
+              this.updateFileList();
+
+            }.bind(this), 10);
+          } else {
+              console.log('Error: ' + data.msg);
+          }
+        }.bind(this),
+        error: function(jqXHR, msg, err) {
+          console.log("Error: " + msg);
+        }.bind(this)
+    });
+  },
+  onDrop: function(files) {
+    var file = files[0];
     var data = new FormData();
-    if(!this.state.fileToUpload) {
-      // ignore when file is empty
-      return;
-    }
-    data.append('file', this.state.fileToUpload);
+    data.append('file', file);
 
     $.ajax({
         url: '/api/upload',
@@ -68,7 +93,11 @@ var FileApp = React.createClass({
         success: function(data, msg, jqXHR) {
           // data: return data
           if(!data.err) {
-            this.updateFileList();
+            setTimeout(function() {
+              // need a delay to ensure that file updated at db
+              this.updateFileList();
+
+            }.bind(this), 10);
           } else {
               console.log('Error: ' + data.msg);
           }
@@ -78,33 +107,8 @@ var FileApp = React.createClass({
         }.bind(this)
     });
   },
-  handleFileChange: function(e) {
-    var file = e.target.files[0];
-    this.setState({fileToUpload: e.target.files[0]});
-  },
-  componentDidMount: function() {
-    this.updateFileList();
-  },
-  deleteFile: function(item) {
-    var itemId = item.target.id;
-    $.ajax({
-        url: '/api/files/' + itemId,
-        type: 'DELETE',
-        cache: false,
-        dataType: 'json',
-        processData: false,
-        contentType: false,
-        success: function(data, msg, jqXHR) {
-          if(!data.err) {
-            this.updateFileList();
-          } else {
-              console.log('Error: ' + data.msg);
-          }
-        }.bind(this),
-        error: function(jqXHR, msg, err) {
-          console.log("Error: " + msg);
-        }.bind(this)
-    });
+  onDragOver: function(e) {
+    // do nothing
   }
 });
 
